@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './assets/css/index.css'
 import Register from './pages/Register.tsx'
+import Login from './pages/Login.tsx'
 
 import { Center, extendTheme } from '@chakra-ui/react'
 import { ChakraProvider } from '@chakra-ui/react'
@@ -27,7 +28,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <h1> Hello World </h1>,
+    element: <Login />,
   },
 ]);
 

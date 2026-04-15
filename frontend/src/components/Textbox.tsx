@@ -32,13 +32,13 @@ export const Textbox = ({
       type={type}
       value={value ?? ''}
       onChange={handleChange}
+      {...props}
       style={{
         backgroundColor: '#f0f0f0',
         border: '1px solid #ccc',
         borderRadius: '6px',
         width: '100%',
       }}
-      {...props}
     />
   );
 };

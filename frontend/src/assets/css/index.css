@@ -13,8 +13,15 @@ body {
   height: 100vh;
 }
 
+.links {
+  color: #97c5fc;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
+}
 
 .register-card {
+  background-color: #F0F0F0;
   background: white;
   border-radius: 12px;
   padding: 16px;
@@ -22,8 +29,8 @@ body {
               0 4px 6px -2px rgba(0, 0, 0, 0.03);
 }
 
-
 .gradiant-font {
+  font-family: 'Montserrat'!important;
   background: linear-gradient(120deg, #8ec5fc 100%, #e0c3fc 0%);
   -webkit-background-clip: text; 
   background-clip: text;
