@@ -10,6 +10,9 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const colors = {
   brand: {
     900: '#1a365d',
@@ -36,6 +39,11 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ChakraProvider theme={theme}>
       <Center h="100vh" w="100vw">
+        <ToastContainer
+          position="top-right"
+          theme="colored"
+          autoClose={3000}
+        />
         <RouterProvider router={router} />
       </Center>
     </ChakraProvider>

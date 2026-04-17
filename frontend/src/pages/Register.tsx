@@ -9,15 +9,17 @@ import {
   Center,
   SimpleGrid,
   HStack,
-  FormHelperText
+  FormHelperText,
+  FormErrorMessage
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Textbox } from "../components/Textbox";
 import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import { CancelButton } from "../components/Buttons/CancelButton";
 import { useNavigate } from "react-router-dom";
 import z from "zod";
 import { register } from "../services/auth";
+import { showNotification } from "../components/showNotification";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ const Register = () => {
   const [password, setPassword] = useState<string | number>("");
   const [confirmPassword, setConfirmPassword] = useState<string | number>("");
 
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const registerSchema = z.object({
@@ -45,15 +48,18 @@ const Register = () => {
   });
 
   const handleRegister = async () => {
+    setIsLoading(true);
+    setErrors({});
     const result = registerSchema.safeParse({ firstName, lastName, email, username, password, confirmPassword });
-    console.log(result.success)
 
     if (!result.success) {
+      setIsLoading(false);
       const formattedErrors: { [key: string]: string } = {};
       result.error.issues.forEach((issue) => {
         formattedErrors[String(issue.path[0])] = issue.message;
       });
       setErrors(formattedErrors);
+        showNotification("error", "Failed to create user.");
     } else {
       const response = await register({
         first_name: String(firstName),
@@ -63,18 +69,18 @@ const Register = () => {
         password: String(password)
       })
 
-      console.log('Response:', response);
+      if (response.success) {
+        navigate("/");
+        showNotification("success", "User created successfully, Please login your account to start.");
+      } else {
+        showNotification("error", "Failed to create user.");
+      }
+
+      setIsLoading(false);
 
     }
 
   }
-
-  useEffect(() => {
-    console.log(errors)
-  }, [errors]);
-  
-
-
 
   return (
     <Center>
@@ -87,7 +93,7 @@ const Register = () => {
         <CardBody pt={0}>
           <SimpleGrid columns={1} mt={4}>
             <Box>
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={!!errors.firstName}>
                 <FormLabel>First Name</FormLabel>
                 <Textbox
                   value={firstName}
@@ -96,8 +102,9 @@ const Register = () => {
                     setFirstName(val);
                   }}
                 />
+                <FormErrorMessage>{errors.firstName}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={!!errors.lastName}>
                 <FormLabel marginTop={"20px"}>Last Name</FormLabel>
                 <Textbox
                   value={lastName}
@@ -106,8 +113,9 @@ const Register = () => {
                     setLastName(val);
                   }}
                 />
+                <FormErrorMessage>{errors.lastName}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={!!errors.email}>
                 <FormLabel marginTop={"20px"}>Email</FormLabel>
                 <Textbox
                   value={email}
@@ -117,8 +125,9 @@ const Register = () => {
                   }}
                 />
                 <FormHelperText>Please provide a unique email address.</FormHelperText>
+                {errors.email && <FormErrorMessage>{errors.email}</FormErrorMessage>}
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={!!errors.username}>
                 <FormLabel marginTop={"20px"}>Username</FormLabel>
                 <Textbox
                   value={username}
@@ -127,8 +136,9 @@ const Register = () => {
                     setUsername(val);
                   }}
                 />
+                <FormErrorMessage>{errors.username}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={!!errors.password}>
                 <FormLabel marginTop={"20px"}>Password</FormLabel>
                 <Textbox
                   value={password}
@@ -137,8 +147,9 @@ const Register = () => {
                     setPassword(val);
                   }}
                 />
+                <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={!!errors.confirmPassword}>
                 <FormLabel marginTop={"20px"}>Confirm Password</FormLabel>
                 <Textbox
                   value={confirmPassword}
@@ -147,6 +158,7 @@ const Register = () => {
                     setConfirmPassword(val);
                   }}
                 />
+                <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>
               </FormControl>
               <HStack
                 justifyContent="flex-end"
@@ -161,6 +173,7 @@ const Register = () => {
                   }}
                 />
                 <PrimaryButton
+                  disabled={isLoading}
                   value="Register"
                   onClick={handleRegister}
                 />

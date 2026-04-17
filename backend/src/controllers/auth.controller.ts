@@ -12,7 +12,7 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Invalid username does not exist' });
   }
 
-  res.json({ message: 'Login successful' });
+  res.status(200).json({ success: true, message: 'Login successful' });
 }
 
 export const register = async (req: Request, res: Response) => {
@@ -22,11 +22,11 @@ export const register = async (req: Request, res: Response) => {
   const existingUser = await UserRepository.findOneBy({ username: username }); 
 
   if(existingUser) {
-    return res.status(400).json({ message: 'Username already exists' });
+    return res.status(400).json({ success: false, message: 'Username already exists' });
   }
 
   const newUser = UserRepository.create({ first_name, last_name, email, username, password });
   await UserRepository.save(newUser);
 
-  res.status(201).json({ message: 'User registered successfully' });
+  res.status(201).json({ success: true, message: 'User registered successfully' });
 }

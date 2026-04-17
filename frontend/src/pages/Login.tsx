@@ -12,14 +12,17 @@ import {
   HStack,
   Checkbox,
   Stack,
+  FormErrorMessage,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Textbox } from "../components/Textbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import PasswordField from "../components/PasswordField";
 import * as z from "zod";
 import { login } from "../services/auth";
+import { showNotification } from "../components/showNotification";
+import { useAuthStore } from "../store/auth.store";
 
 const loginSchema = z.object({
   username: z.string().min(1, "This field is required"),
@@ -29,12 +32,17 @@ const loginSchema = z.object({
 export type LoginValues = z.infer<typeof loginSchema>;
 
 const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState<string | number>("");
   const [password, setPassword] = useState<string | number>("");
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const onSubmit = () => {
+  const loginAuthStore = useAuthStore((state) => state.login);
+  const userStore = useAuthStore((state) => state.user);
+
+  const onSubmit = async () => {
+    setErrors({});
     const result = loginSchema.safeParse({ username, password });
     if (!result.success) {
       const formattedErrors: { [key: string]: string } = {};
@@ -43,14 +51,26 @@ const Login = () => {
       });
       setErrors(formattedErrors);
     } else {
-      const response = login({
+      const response = await login({
         username: username.toString(),
         password: password.toString(),
       });
 
-      console.log('Response:', response);
+      if (response.success) {
+        loginAuthStore(response.user, response.token);
+        navigate("/");
+        showNotification("success", "Login successful!");
+      } else {
+        showNotification("error", response.message || "Login failed. Please check your credentials and try again.");
+      }
     }
   };
+
+
+  useEffect(() => {
+    console.log(userStore)
+  }, [userStore]);
+  
 
   return (
     <Center>
@@ -73,7 +93,7 @@ const Login = () => {
         <CardBody style={{ paddingTop: "0" }}>
           <SimpleGrid columns={1}>
             <Box>
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={!!errors.username}>
                 <FormLabel>Username</FormLabel>
                 <Textbox
                   isInvalid={!!errors.username}
@@ -83,27 +103,18 @@ const Login = () => {
                     setUsername(val);
                   }}
                 />
-                {errors.username?.length > 0 && (
-                  <Text color="red.500" fontSize="sm" mt={1}>
-                    {errors.username}
-                  </Text>
-                )}
+                <FormErrorMessage>{errors.username}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={!!errors.password}>
                 <FormLabel marginTop={"20px"}>Password</FormLabel>
                 <PasswordField
                   isInvalid={!!errors.password}
                   value={password}
                   onChange={(val: string | number) => {
-                    console.log('password value:', val);
                     setPassword(val)
                   }}
                 />
-                {errors.password?.length > 0 && (
-                  <Text color="red.500" fontSize="sm" mt={1}>
-                    {errors.password}
-                  </Text>
-                )}
+                <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>
               <Stack mt={2} spacing={1}>
                 <FormControl mt={4}>
@@ -122,3 +133,4 @@ const Login = () => {
 };
 
 export default Login;
+
