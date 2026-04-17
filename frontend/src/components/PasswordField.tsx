@@ -2,13 +2,12 @@ import { useState } from 'react'
 import { Button, InputGroup, InputRightElement, type InputProps } from '@chakra-ui/react'
 import { Textbox } from './Textbox';
 
-interface PasswordFieldProps extends Omit<InputProps, 'onChange'> {
+interface PasswordFieldProps extends Omit<InputProps, 'onChange' | 'type'> {
   value?: string | number;
   onChange?: (value: string | number) => void;
-  ref?: React.Ref<HTMLInputElement>;
 }
 
-const PasswordField = ({value, onChange} : PasswordFieldProps) => {
+const PasswordField = ({value, onChange, ...props} : PasswordFieldProps) => {
   const [show, setShow] = useState<boolean>(false)
   const handleClick = () => setShow(!show)
 
@@ -16,10 +15,11 @@ const PasswordField = ({value, onChange} : PasswordFieldProps) => {
     <InputGroup size='md'>
       <Textbox
         pr='4.5rem'
-        type={show ? 'text' : 'password'}
         placeholder='Enter password'
         value={value}
         onChange={onChange}
+        type={show ? 'text' : 'password'}
+        {...props}
       />
       <InputRightElement width='4.5rem'>
         <Button h='1.75rem' size='sm' onClick={handleClick}>

@@ -11,11 +11,13 @@ import {
   HStack,
   FormHelperText
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Textbox } from "../components/Textbox";
 import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import { CancelButton } from "../components/Buttons/CancelButton";
 import { useNavigate } from "react-router-dom";
+import z from "zod";
+import { register } from "../services/auth";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -26,6 +28,53 @@ const Register = () => {
   const [username, setUsername] = useState<string | number>("");
   const [password, setPassword] = useState<string | number>("");
   const [confirmPassword, setConfirmPassword] = useState<string | number>("");
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const registerSchema = z.object({
+    firstName: z.string().min(1, "This field is required"),
+    lastName: z.string().min(1, "This field is required"),
+    email: z.string().email("Please enter a valid email address"),
+    username: z.string().min(1, "This field is required"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string()
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"], 
+  });
+
+  const handleRegister = async () => {
+    const result = registerSchema.safeParse({ firstName, lastName, email, username, password, confirmPassword });
+    console.log(result.success)
+
+    if (!result.success) {
+      const formattedErrors: { [key: string]: string } = {};
+      result.error.issues.forEach((issue) => {
+        formattedErrors[String(issue.path[0])] = issue.message;
+      });
+      setErrors(formattedErrors);
+    } else {
+      const response = await register({
+        first_name: String(firstName),
+        last_name: String(lastName),
+        email: String(email),
+        username: String(username),
+        password: String(password)
+      })
+
+      console.log('Response:', response);
+
+    }
+
+  }
+
+  useEffect(() => {
+    console.log(errors)
+  }, [errors]);
+  
+
+
 
   return (
     <Center>
@@ -113,9 +162,7 @@ const Register = () => {
                 />
                 <PrimaryButton
                   value="Register"
-                  onClick={() => {
-                    alert("submit");
-                  }}
+                  onClick={handleRegister}
                 />
               </HStack>
             </Box>
