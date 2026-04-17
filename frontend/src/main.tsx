@@ -12,6 +12,7 @@ import { RouterProvider } from "react-router/dom";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Dashboard from './pages/Dashboard.tsx'
 
 const colors = {
   brand: {
@@ -26,12 +27,16 @@ const theme = extendTheme({ colors })
 
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <Login />,
+  },
+  {
     path: "/register",
     element: <Register />,
   },
   {
-    path: "/",
-    element: <Login />,
+    path: "/dashboard",
+    element: <Dashboard />,
   },
 ]);
 

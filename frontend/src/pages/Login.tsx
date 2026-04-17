@@ -58,7 +58,7 @@ const Login = () => {
 
       if (response.success) {
         loginAuthStore(response.user, response.token);
-        navigate("/");
+        navigate("/dashboard");
         showNotification("success", "Login successful!");
       } else {
         showNotification("error", response.message || "Login failed. Please check your credentials and try again.");
@@ -74,7 +74,7 @@ const Login = () => {
 
   return (
     <Center>
-      <Card minW={"550px"} className="register-card">
+      <Card minW={"550px"} className="main-card">
         <CardHeader>
           <Heading
             size="lg"

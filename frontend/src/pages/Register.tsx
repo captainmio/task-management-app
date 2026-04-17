@@ -84,7 +84,7 @@ const Register = () => {
 
   return (
     <Center>
-      <Card minW={"550px"} className="register-card">
+      <Card minW={"550px"} className="main-card">
         <CardHeader>
           <Heading size="lg" textAlign="center" className="gradiant-font header-font">
             Create an Account
