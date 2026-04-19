@@ -9,6 +9,7 @@ interface ButtonProps {
     bg?: string;
   };
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export const PrimaryButton = ({

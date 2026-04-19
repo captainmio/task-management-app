@@ -20,8 +20,8 @@ import { useEffect, useState } from "react";
 import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import PasswordField from "../components/PasswordField";
 import * as z from "zod";
-import { login } from "../services/auth";
-import { showNotification } from "../components/showNotification";
+import { login } from "../services/auth.service";
+import { showNotification } from "../components/ShowNotification";
 import { useAuthStore } from "../store/auth.store";
 
 const loginSchema = z.object({

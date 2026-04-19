@@ -18,8 +18,8 @@ import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import { CancelButton } from "../components/Buttons/CancelButton";
 import { useNavigate } from "react-router-dom";
 import z from "zod";
-import { register } from "../services/auth";
-import { showNotification } from "../components/showNotification";
+import { register } from "../services/auth.service";
+import { showNotification } from "../components/ShowNotification";
 
 const Register = () => {
   const navigate = useNavigate();

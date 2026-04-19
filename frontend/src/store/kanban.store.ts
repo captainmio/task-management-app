@@ -4,30 +4,46 @@ export type Task = {
   id: string;
   title: string;
   description: string;
+  status: Status;
 };
+
+export type Status = "backlog" | "todo" | "inProgress" | "review" | "done";
+
+type Columns = Record<Status, Task[]>;
 
 export type KanbanState = {
   columns: Record<string, Task[]>;
+  setTasksFromBackend: (tasks: Task[]) => void;
   moveTask: (taskId: string, fromColumn: string, toColumn: string) => void;
+  updateTask: (task: Task) => void;
 };
 
 
 
-export const useKanbanStore = create<KanbanState>((set) => ({
+export const useKanbanStore = create<KanbanState>((set, get) => ({
   columns: {
-    todo: [
-      { id: "1", title: "Task 1", description: "Description of Task 1" },
-      { id: "2", title: "Task 2", description: "Description of Task 2" },
-    ],
-    progress: [
-      { id: "3", title: "Task 3", description: "Description of Task 3" },
-    ],
-    done: [
-      { id: "4", title: "Task 4", description: "Description of Task 4" },
-    ],
+    backlog: [],
+    todo: [],
+    inProgress: [],
+    review: [],
+    done: [],
   },
+  setTasksFromBackend: (tasks) => {
+    const grouped: Columns = {
+      backlog: [],
+      todo: [],
+      inProgress: [],
+      review: [],
+      done: [],
+    };
 
-  moveTask: (taskId, fromColumn, toColumn) =>
+    tasks.forEach((task: Task) => {
+      grouped[task.status].push(task);
+    });
+
+    set({ columns: grouped });
+  },
+  moveTask: (taskId, fromColumn, toColumn) => 
     set((state) => {
       const fromTasks = state.columns[fromColumn];
       const task = fromTasks.find((t) => t.id === taskId);
@@ -42,4 +58,21 @@ export const useKanbanStore = create<KanbanState>((set) => ({
         },
       };
     }),
+    updateTask: (updatedTask: Task) => {
+      const state = get();
+
+      const newColumns = { ...state.columns };
+
+      // remove from all columns first
+      (Object.keys(newColumns) as Status[]).forEach((col) => {
+        newColumns[col] = newColumns[col].filter(
+          (t) => t.id !== updatedTask.id
+        );
+      });
+
+      // add to correct column
+      newColumns[updatedTask.status].push(updatedTask);
+
+      set({ columns: newColumns });
+    },
 }));

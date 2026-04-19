@@ -8,6 +8,9 @@ import express from 'express';
 import cors from 'cors';
 
 import authRoutes from './routes/auth.route';
+import taskRoutes from './routes/task.route';
+
+import http from "http";
 
 
 export const initDatabases = async () => {
@@ -24,9 +27,15 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
+
+const server = http.createServer(app);
+
+
+
 const PORT = process.env.PORT || 3000;
 
 app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
 app.listen(3000, async () => {
   await initDatabases();

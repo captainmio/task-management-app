@@ -19,6 +19,8 @@ import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import DroppableColumn from "../components/Kanban/DroppableColumn";
 import { useKanbanStore, type Task } from "../store/kanban.store";
 import { useAuthStore } from "../store/auth.store";
+import { useEffect } from "react";
+import { getTasksByProjectId } from "../services/task.service";
 
 /* -----------------------------
    Types
@@ -33,13 +35,29 @@ type ColumnType = {
 const Dashboard = () => {
   const { columns, moveTask } = useKanbanStore();
   const user = useAuthStore((state) => state.user)
+  const setTasksFromBackend = useKanbanStore(
+  (s) => s.setTasksFromBackend
+);
 
   // Convert store columns to component format
   const columnData: ColumnType[] = [
     { id: "todo", title: "To Do", items: columns?.todo || [] },
-    { id: "progress", title: "In Progress", items: columns?.progress || [] },
+    { id: "inProgress", title: "In Progress", items: columns?.inProgress || [] },
     { id: "done", title: "Done", items: columns?.done || [] },
   ];
+
+  const fetchTasks = async () => {
+    const projectId = 1
+    const response = await getTasksByProjectId(projectId);
+
+    if(response.success) {
+      return setTasksFromBackend(response.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
   /* -----------------------------
      Handle Drag End

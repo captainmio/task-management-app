@@ -1,5 +1,5 @@
 import { default as axios } from "axios";
-import { showNotification } from "../components/showNotification";
+import { showNotification } from "../components/ShowNotification";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const api = axios.create({
@@ -20,6 +20,11 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+api.interceptors.request.use((config) => {
+  config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
+  return config;
+});
 
 
 export default api
