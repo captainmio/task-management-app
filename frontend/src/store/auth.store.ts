@@ -3,8 +3,8 @@ import { persist } from "zustand/middleware";
 
 export type User = {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
 };
 

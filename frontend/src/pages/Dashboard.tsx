@@ -18,6 +18,7 @@ import {
 import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import DroppableColumn from "../components/Kanban/DroppableColumn";
 import { useKanbanStore, type Task } from "../store/kanban.store";
+import { useAuthStore } from "../store/auth.store";
 
 /* -----------------------------
    Types
@@ -31,6 +32,7 @@ type ColumnType = {
 
 const Dashboard = () => {
   const { columns, moveTask } = useKanbanStore();
+  const user = useAuthStore((state) => state.user)
 
   // Convert store columns to component format
   const columnData: ColumnType[] = [
@@ -75,7 +77,7 @@ const Dashboard = () => {
           </Box>
           <Box textAlign="right">
             <Badge ml="1" colorScheme="green" px={2} fontSize="0.8em">
-              Welcome, User!
+              Welcome, {user?.first_name}
             </Badge>
           </Box>
         </Grid>

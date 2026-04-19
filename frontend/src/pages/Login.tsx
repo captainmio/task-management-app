@@ -57,7 +57,7 @@ const Login = () => {
       });
 
       if (response.success) {
-        loginAuthStore(response.user, response.token);
+        loginAuthStore(response.data, response.token);
         navigate("/dashboard");
         showNotification("success", "Login successful!");
       } else {

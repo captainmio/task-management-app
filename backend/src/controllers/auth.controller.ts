@@ -12,7 +12,7 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Invalid username does not exist' });
   }
 
-  res.status(200).json({ success: true, message: 'Login successful' });
+  res.status(200).json({ success: true, data: user, message: 'Login successful' });
 }
 
 export const register = async (req: Request, res: Response) => {
