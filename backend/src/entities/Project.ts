@@ -10,4 +10,7 @@ export class Project {
 
   @Column()
   description!: string;
+
+  @Column()
+  userId!: number;
 }

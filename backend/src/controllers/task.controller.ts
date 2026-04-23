@@ -5,8 +5,12 @@ import { TaskRepository } from '../repositories/task.repository';
 
 const repo = TaskRepository;
 
-export const getTasks = async (req: any, res: Response) => {
-  const { projectId } = req.params;
+type getTaskReq = {
+  projectId: number;
+}
+
+export const getTasks = async (req: Request, res: Response) => {
+  const { projectId } = req.params as unknown as getTaskReq;
   const tasks = await repo.find({
     where: { projectId: projectId },
   });

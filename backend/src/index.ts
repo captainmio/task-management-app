@@ -9,6 +9,7 @@ import cors from 'cors';
 
 import authRoutes from './routes/auth.route';
 import taskRoutes from './routes/task.route';
+import projectRoutes from './routes/project.route';
 
 import http from "http";
 
@@ -36,6 +37,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/projects', projectRoutes);
 
 app.listen(3000, async () => {
   await initDatabases();

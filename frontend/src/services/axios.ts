@@ -21,7 +21,6 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
     if (error.response && (error.response.status === 401)) {
-
       const { data } = await api.post('refresh-token')
       try {
           api.defaults.headers.common["Authorization"] = `Bearer ${data.accessToken}`
