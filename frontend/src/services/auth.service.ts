@@ -20,6 +20,11 @@ export const register = async (data: {
   return res.data;
 }
 
+export const logout = async () => {
+  const res = await api.post("/auth/logout");
+  return res.data;
+}
+
 export const refreshToken = async () => {
 
 }

@@ -11,7 +11,7 @@ interface BreadcrumbsProps {
 
 export const Breadcrumbs = ({links}: BreadcrumbsProps) => {
   return (
-    <Breadcrumb>
+    <Breadcrumb size={'md'}>
         {links.map(({link, label}) => (
             <BreadcrumbItem key={link}>
                 <BreadcrumbLink href={link}>{label}</BreadcrumbLink>

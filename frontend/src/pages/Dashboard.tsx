@@ -21,6 +21,7 @@ import { useKanbanStore, type Task } from "../store/kanban.store";
 import { useAuthStore } from "../store/auth.store";
 import { useEffect } from "react";
 import { getTasksByProjectId } from "../services/task.service";
+import Topbar from "../components/Topbar";
 
 /* -----------------------------
    Types
@@ -89,18 +90,7 @@ const Dashboard = () => {
   return (
     <Center h="100vh" w="100vw">
       <Stack spacing={4} w="100%" maxW="1200px" p={4}>
-        <Grid templateColumns="repeat(2, 1fr)" gap={2} mb={4} p={2}>
-          <Box>
-            <Text fontSize="2xl" fontWeight="bold">
-              Dashboard
-            </Text>
-          </Box>
-          <Box textAlign="right">
-            <Badge ml="1" colorScheme="green" px={2} fontSize="0.8em">
-              Welcome, {user?.first_name}
-            </Badge>
-          </Box>
-        </Grid>
+        <Topbar title="Tasks" />
         <Card w="100%" maxW="1600px" p={4}>
           <CardHeader>
             <PrimaryButton

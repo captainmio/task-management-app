@@ -39,7 +39,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
       res.clearCookie('refreshToken')
-      return res.status(200).json({ message: 'Logged out successfully' });
+      return res.status(200).json({ success: true, message: 'Logged out successfully' });
 }
 
 export const register = async (req: Request, res: Response) => {

@@ -14,6 +14,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from './pages/Dashboard.tsx'
 import Project from './pages/Project.tsx'
+import { AuthGuard } from './components/AuthGuard.tsx'
 
 const colors = {
   brand: {
@@ -36,12 +37,17 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: "/dashboard",
-    element: <Dashboard />,
-  },
-  {
-    path: "/projects",
-    element: <Project />,
+    element: <AuthGuard />, // This component wraps everything below
+    children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/projects",
+        element: <Project />,
+      },
+    ],
   },
 ]);
 
