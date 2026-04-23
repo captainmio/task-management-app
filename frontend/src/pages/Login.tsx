@@ -21,7 +21,7 @@ import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import PasswordField from "../components/PasswordField";
 import * as z from "zod";
 import { login } from "../services/auth.service";
-import { showNotification } from "../components/ShowNotification";
+import { showNotification } from "../components/showNotification";
 import { useAuthStore } from "../store/auth.store";
 
 const loginSchema = z.object({
@@ -58,7 +58,7 @@ const Login = () => {
 
       if (response.success) {
         loginAuthStore(response.data, response.token);
-        navigate("/dashboard");
+        navigate("/projects");
         showNotification("success", "Login successful!");
       } else {
         showNotification("error", response.message || "Login failed. Please check your credentials and try again.");

@@ -1,5 +1,7 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { UserRepository } from "../repositories/user.repository";
+import { generateAccessToken, generateRefreshToken, refreshTokenService } from "../services/auth.service";
+import ms from "ms";
 
 export const login = async (req: Request, res: Response) => {
   
@@ -12,7 +14,32 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Invalid username does not exist' });
   }
 
-  res.status(200).json({ success: true, data: user, message: 'Login successful' });
+  const accessToken = generateAccessToken({ username })
+  const refreshToken = generateRefreshToken({ username })
+
+  if (!refreshToken || !accessToken) {
+    return res.status(500).json({ message: 'Unexpected error occurred.' })
+  }
+
+
+  res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // its true when production and its false development mode
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', // its none when we made production because its based on different domains, but in development its strict because localhost wants that
+      maxAge: ms(process.env.REFRESH_TOKEN_EXPIRATION! as ms.StringValue) 
+    });
+
+  res.status(200).json({ 
+    success: true, 
+    data: user, 
+    message: 'Login successful',
+    token: accessToken
+  });
+}
+
+export const logout = async (req: Request, res: Response) => {
+      res.clearCookie('refreshToken')
+      return res.status(200).json({ message: 'Logged out successfully' });
 }
 
 export const register = async (req: Request, res: Response) => {
@@ -29,4 +56,32 @@ export const register = async (req: Request, res: Response) => {
   await UserRepository.save(newUser);
 
   res.status(201).json({ success: true, message: 'User registered successfully' });
+}
+
+export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  const { refreshToken } = req.cookies
+
+  if (!refreshToken) return res.status(403).json({ message: 'Refresh token not provided.' })
+
+  try {
+      const newTokens = await refreshTokenService(refreshToken)
+      
+      res.cookie("refreshToken", newTokens.refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+          maxAge: ms(process.env.REFRESH_TOKEN_EXPIRATION as ms.StringValue),
+      })
+
+
+      return res.status(200).json({
+          message: 'Token refreshed successfully!',
+          accessToken: newTokens.accessToken,
+      })
+
+  } catch (error) {
+      
+      console.log("Invalid refresh token")
+      next(error)
+  }
 }

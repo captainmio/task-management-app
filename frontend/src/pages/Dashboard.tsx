@@ -35,6 +35,7 @@ type ColumnType = {
 const Dashboard = () => {
   const { columns, moveTask } = useKanbanStore();
   const user = useAuthStore((state) => state.user)
+  const token = useAuthStore((state) => state.token)
   const setTasksFromBackend = useKanbanStore(
   (s) => s.setTasksFromBackend
 );
@@ -56,6 +57,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    console.log(user, token)
     fetchTasks();
   }, []);
 
@@ -73,7 +75,7 @@ const Dashboard = () => {
     // Find which column the task is coming from
     let fromColumn = "";
     for (const [columnKey, tasks] of Object.entries(columns)) {
-      if (tasks.some((task) => task.id === activeId)) {
+      if (tasks.some((task: {id: string}) => task.id === activeId)) {
         fromColumn = columnKey;
         break;
       }

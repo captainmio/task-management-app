@@ -5,6 +5,7 @@ export type User = {
   id: string;
   first_name: string;
   last_name: string;
+  username: string;
   email: string;
 };
 
@@ -16,6 +17,8 @@ export type AuthState = {
   login: (user: User, token: string) => void;
   logout: () => void;
   setUser: (user: User) => void;
+  setToken: (token: string) => void;
+  clearToken: () => void;
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -41,12 +44,28 @@ export const useAuthStore = create<AuthState>()(
 
       setUser: (user) =>
         set({
-          user,
+          user:{
+            id: user.id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            username: user.username,
+            email: user.email,
+          },
+          isAuthenticated: true,
+        }),
+      clearToken: () =>
+        set({
+          token: null,
+          isAuthenticated: false,
+        }),
+      setToken: (token: string) =>
+        set({
+          token,
           isAuthenticated: true,
         }),
     }),
     {
-      name: "auth-storage",
+      name: "auth-store",
     }
   )
 );
