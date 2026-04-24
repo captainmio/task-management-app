@@ -20,14 +20,23 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config
-    if (error.response && (error.response.status === 401)) {
-      const { data } = await api.post('refresh-token')
+    if (error.response?.status === 401 && !originalRequest._retry) {
+
+      if (originalRequest.url === 'auth/refresh-token') {
+        useAuthStore.getState().clearToken();
+        return Promise.reject(error);
+      }
+      originalRequest._retry = true;
       try {
-          api.defaults.headers.common["Authorization"] = `Bearer ${data.accessToken}`
+        
+          const { data } = await api.post('auth/refresh-token')
+          
+          api.defaults.headers.common["Authorization"] = `Bearer ${data.accessToken}`;
+          originalRequest.headers["Authorization"] = `Bearer ${data.accessToken}`;
+
           return api(originalRequest)
       } catch (err) {
           useAuthStore.getState().clearToken();
-          useAuthStore.getState().setToken(data.accessToken);
 
           return Promise.reject(err)
       }
@@ -35,7 +44,9 @@ api.interceptors.response.use(
     } else if (error.response && (error.response.status === 400)) {
             // Logic for 400 errors (e.g., alert the user or log the error)
       const message = error.response.data.message || "Invalid request";
-      showNotification("error", message); // Example using a notification library
+      showNotification({
+        type: "error", message
+      }); // Example using a notification library
     }
     return Promise.reject(error);
   }

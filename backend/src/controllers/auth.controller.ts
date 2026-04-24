@@ -59,7 +59,14 @@ export const register = async (req: Request, res: Response) => {
 }
 
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-  const { refreshToken } = req.cookies
+
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Unauthorized: Missing or invalid token' });
+  }
+
+  const refreshToken = authHeader.split(' ')[1];
 
   if (!refreshToken) return res.status(403).json({ message: 'Refresh token not provided.' })
 
@@ -80,8 +87,6 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       })
 
   } catch (error) {
-      
-      console.log("Invalid refresh token")
-      next(error)
+    return res.status(401).json({ message: 'Unauthorized: Missing or invalid token' });
   }
 }
