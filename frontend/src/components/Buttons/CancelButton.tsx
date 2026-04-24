@@ -11,13 +11,13 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-export const CancelButton = ({
+export const CancelButton: React.FC<ButtonProps> = ({
   type = "button",
   value,
   className = "",
   onClick,
   ...props
-}: ButtonProps) => {
+}) => {
   return (
     <Button
       type={type}

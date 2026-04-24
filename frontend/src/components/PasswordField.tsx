@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { Button, InputGroup, InputRightElement, type InputProps } from '@chakra-ui/react'
 import { Textbox } from './Textbox';
+import React from 'react';
 
 interface PasswordFieldProps extends Omit<InputProps, 'onChange' | 'type'> {
   value?: string | number;
   onChange?: (value: string | number) => void;
 }
 
-const PasswordField = ({value, onChange, ...props} : PasswordFieldProps) => {
+const PasswordField: React.FC<PasswordFieldProps> = ({value, onChange, ...props}) => {
   const [show, setShow] = useState<boolean>(false)
   const handleClick = () => setShow(!show)
 

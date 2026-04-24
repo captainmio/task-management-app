@@ -4,6 +4,7 @@ import Topbar from '../components/Topbar';
 import { useEffect, useState } from 'react';
 import { LoadingState } from '../components/LoadingState';
 import { getProjects } from '../services/project.service';
+import { PrimaryButton } from '../components/Buttons/PrimaryButton';
 
 type TaskType = {
   id: number;
@@ -49,10 +50,10 @@ const Project = () => {
             <Topbar title="Projects" />
             <Card w="100%" maxW="1600px" p={4}>
                 <CardHeader>
-                    <Text fontSize="2xl" fontWeight="bold">Project listing</Text>
+                    <PrimaryButton value={'Create Project'} />
                 </CardHeader>
                 <CardBody style={{ paddingTop: "0" }}>
-                    <DynamicTable columns={columns} data={projects}/>
+                    <DynamicTable columns={columns} data={projects} variant={'striped'}/>
                 </CardBody>
             </Card>
         </Stack>

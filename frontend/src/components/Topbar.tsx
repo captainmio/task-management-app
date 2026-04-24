@@ -2,8 +2,11 @@ import { Grid, Box, Badge, Text, Button, Stack, SimpleGrid, VStack } from '@chak
 import { useAuthStore } from "../store/auth.store";
 import { logout } from '../services/auth.service';
 
+interface TopbarProps { 
+    title: string 
+}
 
-const Topbar = ({ title }: { title: string }) => {
+const Topbar: React.FC<TopbarProps> = ({ title } ) => {
     const user = useAuthStore((state) => state.user)
 
     const handleLogout = async () => {

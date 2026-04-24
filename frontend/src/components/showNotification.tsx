@@ -3,7 +3,12 @@ import { toast } from "react-toastify";
 
 type ToastType = "success" | "warning" | "error";
 
-export const showNotification = (type: ToastType, message: string) => {
+interface showNotificationProps {
+  type: ToastType;
+  message: string
+}
+
+export const showNotification: React.FC<showNotificationProps> = ({type, message}) => {
   const options = {
     position: "top-right" as const,
     theme: "colored" as const,

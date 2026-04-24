@@ -12,13 +12,13 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-export const PrimaryButton = ({
+export const PrimaryButton: React.FC<ButtonProps> = ({
   type = "button",
   value,
   className = "",
   onClick,
   ...props
-}: ButtonProps) => {
+}) => {
   return (
     <Button
       type={type}

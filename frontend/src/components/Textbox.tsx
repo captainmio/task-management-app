@@ -8,13 +8,13 @@ interface TextboxProps extends Omit<InputProps, 'onChange'> {
   ref?: React.Ref<HTMLInputElement>;
 }
 
-export const Textbox = ({ 
+export const Textbox: React.FC<TextboxProps> = ({ 
   value, 
   onChange, 
   type = 'text', 
   ref, 
   ...props 
-}: TextboxProps) => {
+}) => {
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;

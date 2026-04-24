@@ -6,7 +6,7 @@ type DraggableTaskProps = {
   task: Task;
 };
 
-export const DraggableTask = ({ task }: DraggableTaskProps) => {
+export const DraggableTask: React.FC<DraggableTaskProps> = ({ task }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: task.id,
   });

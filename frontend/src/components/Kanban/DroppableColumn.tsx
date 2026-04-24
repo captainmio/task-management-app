@@ -9,7 +9,7 @@ type ColumnType = {
   items: Task[];
 };
 
-const DroppableColumn = ({ column }: { column: ColumnType }) => {
+const DroppableColumn: React.FC<{column: ColumnType}> = ({ column }) => {
   const { setNodeRef } = useDroppable({
     id: column.id,
   });

@@ -9,23 +9,28 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 
+
 type Column<T> = {
   key: keyof T;
   label: string;
 };
 
+type variantTypes = 'simple' | 'striped'
+
 type DynamicTableProps<T> = {
   columns: Column<T>[];
   data: T[];
+  variant?: variantTypes
 };
 
 const DynamicTable = <T extends object>({
   columns,
   data,
+  variant = 'simple'
 }: DynamicTableProps<T>) => {
   return (
     <TableContainer>
-      <Table variant="simple" size="md">
+      <Table variant={variant} size="md">
         {/* HEADER */}
         <Thead>
           <Tr>
