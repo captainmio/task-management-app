@@ -59,9 +59,14 @@ const Login = () => {
       if (response.success) {
         loginAuthStore(response.data, response.token);
         navigate("/projects");
-        showNotification("success", "Login successful!");
+        showNotification({
+          type: "success", message: "Login successful!"
+        });
       } else {
-        showNotification("error", response.message || "Login failed. Please check your credentials and try again.");
+        showNotification({
+          type: "error", 
+          message: response.message || "Login failed. Please check your credentials and try again."
+        });
       }
     }
   };
@@ -99,8 +104,8 @@ const Login = () => {
                   isInvalid={!!errors.username}
                   value={username}
                   type="text"
-                  onChange={(val) => {
-                    setUsername(val);
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUsername(e.target.value);
                   }}
                 />
                 <FormErrorMessage>{errors.username}</FormErrorMessage>
@@ -110,8 +115,8 @@ const Login = () => {
                 <PasswordField
                   isInvalid={!!errors.password}
                   value={password}
-                  onChange={(val: string | number) => {
-                    setPassword(val)
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setPassword(e.target.value)
                   }}
                 />
                 <FormErrorMessage>{errors.password}</FormErrorMessage>

@@ -5,7 +5,7 @@ import React from 'react';
 
 interface PasswordFieldProps extends Omit<InputProps, 'onChange' | 'type'> {
   value?: string | number;
-  onChange?: (value: string | number) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const PasswordField: React.FC<PasswordFieldProps> = ({value, onChange, ...props}) => {

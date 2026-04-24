@@ -19,7 +19,7 @@ import { CancelButton } from "../components/Buttons/CancelButton";
 import { useNavigate } from "react-router-dom";
 import z from "zod";
 import { register } from "../services/auth.service";
-import { showNotification } from "../components/ShowNotification";
+import { showNotification } from "../components/showNotification";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -59,7 +59,10 @@ const Register = () => {
         formattedErrors[String(issue.path[0])] = issue.message;
       });
       setErrors(formattedErrors);
-        showNotification("error", "Failed to create user.");
+        showNotification({
+          type: "error", 
+          message: "Failed to create user."
+        });
     } else {
       const response = await register({
         first_name: String(firstName),
@@ -71,9 +74,15 @@ const Register = () => {
 
       if (response.success) {
         navigate("/");
-        showNotification("success", "User created successfully, Please login your account to start.");
+        showNotification({
+          type: "success", 
+          message: "User created successfully, Please login your account to start."
+        });
       } else {
-        showNotification("error", "Failed to create user.");
+        showNotification({
+          type: "error", 
+          message: "Failed to create user."
+        });
       }
 
       setIsLoading(false);
@@ -98,8 +107,8 @@ const Register = () => {
                 <Textbox
                   value={firstName}
                   type="text"
-                  onChange={(val) => {
-                    setFirstName(val);
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setFirstName(e.target.value);
                   }}
                 />
                 <FormErrorMessage>{errors.firstName}</FormErrorMessage>
@@ -109,8 +118,8 @@ const Register = () => {
                 <Textbox
                   value={lastName}
                   type="text"
-                  onChange={(val) => {
-                    setLastName(val);
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setLastName(e.target.value);
                   }}
                 />
                 <FormErrorMessage>{errors.lastName}</FormErrorMessage>
@@ -120,8 +129,8 @@ const Register = () => {
                 <Textbox
                   value={email}
                   type="email"
-                  onChange={(val) => {
-                    setEmail(val);
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setEmail(e.target.value);
                   }}
                 />
                 <FormHelperText>Please provide a unique email address.</FormHelperText>
@@ -132,8 +141,8 @@ const Register = () => {
                 <Textbox
                   value={username}
                   type="text"
-                  onChange={(val) => {
-                    setUsername(val);
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUsername(e.target.value);
                   }}
                 />
                 <FormErrorMessage>{errors.username}</FormErrorMessage>
@@ -143,8 +152,8 @@ const Register = () => {
                 <Textbox
                   value={password}
                   type="password"
-                  onChange={(val) => {
-                    setPassword(val);
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setPassword(e.target.value);
                   }}
                 />
                 <FormErrorMessage>{errors.password}</FormErrorMessage>
@@ -154,8 +163,8 @@ const Register = () => {
                 <Textbox
                   value={confirmPassword}
                   type="password"
-                  onChange={(val) => {
-                    setConfirmPassword(val);
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setConfirmPassword(e.target.value);
                   }}
                 />
                 <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>

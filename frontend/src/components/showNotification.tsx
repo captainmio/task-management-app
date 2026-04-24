@@ -8,7 +8,7 @@ interface showNotificationProps {
   message: string
 }
 
-export const showNotification: React.FC<showNotificationProps> = ({type, message}) => {
+export const showNotification= ({type, message}: showNotificationProps) => {
   const options = {
     position: "top-right" as const,
     theme: "colored" as const,

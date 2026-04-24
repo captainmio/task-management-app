@@ -3,7 +3,7 @@ import { Input, type InputProps } from "@chakra-ui/react";
 
 interface TextboxProps extends Omit<InputProps, 'onChange'> {
   value?: string | number;
-  onChange?: (value: string | number) => void;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   type?: 'text' | 'number' | 'email' | 'password' | 'tel' | 'url';
   ref?: React.Ref<HTMLInputElement>;
 }
@@ -17,13 +17,7 @@ export const Textbox: React.FC<TextboxProps> = ({
 }) => {
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    if (type === 'number') {
-      const numValue = inputValue === '' ? '' : Number(inputValue);
-      onChange?.(numValue as number);
-    } else {
-      onChange?.(inputValue);
-    }
+    onChange(e)
   };
 
   return (
